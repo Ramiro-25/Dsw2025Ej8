@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dsw2025Ej8.Domain
 {
+<<<<<<< HEAD
     public class CajaDeAhorro : CuentaBancaria
     {
         public override TipoCuenta Tipo => TipoCuenta.CajaDeAhorro;
@@ -82,3 +83,9 @@ namespace Dsw2025Ej8.Domain
     }
 }
 
+=======
+    internal class Class1
+    {
+    }
+}
+>>>>>>> a240505106cfc3a5cfd45d7b7ada0faa934324e6

@@ -1,15 +1,26 @@
 ﻿namespace Dsw2025Ej8.Domain;
+<<<<<<< HEAD
 
 public abstract class CuentaBancaria
 {
+=======
+{
+    public abstract class CuentaBancaria
+{
+    public TipoCuenta Tipo { get; }
+>>>>>>> a240505106cfc3a5cfd45d7b7ada0faa934324e6
     public string Numero { get; }
     public decimal Saldo { get; protected set; }
     public Estado Estado { get; protected set; }
     public string[] Titulares { get; }
+<<<<<<< HEAD
     public decimal TasaDeInteres { get; protected set; }
+=======
+>>>>>>> a240505106cfc3a5cfd45d7b7ada0faa934324e6
 
     protected CuentaBancaria(string numero, decimal saldo, string[] titulares)
     {
+<<<<<<< HEAD
         Numero = numero;
         Saldo = saldo;
         Titulares = titulares;
@@ -63,3 +74,14 @@ public abstract class CuentaBancaria
     public abstract void Retirar(decimal monto);
 }
 
+=======
+        ValidarMonto(saldo);
+        Numero = numero;
+        Saldo = saldo;
+        Tipo = tipo;s
+        Estado = Estado.Activa;
+        Titulares = titulares;
+    }
+
+}
+>>>>>>> a240505106cfc3a5cfd45d7b7ada0faa934324e6

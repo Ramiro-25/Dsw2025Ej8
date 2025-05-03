@@ -76,7 +76,7 @@ namespace Dsw2025Ej8.Domain
                 Console.WriteLine($"Error: {ex.Message}");
             }
             catch (Exception ex)
-            {
+    {
                 Console.WriteLine($"Error inesperado: {ex.Message}");
             }
         }
