@@ -1,122 +1,65 @@
 ﻿namespace Dsw2025Ej8.Domain;
 
-public class CuentaBancaria
+public abstract class CuentaBancaria
 {
-    private TipoCuenta _tipo;
-    private string _numero;
-    private decimal _saldo;
-    private Estado _estado;
-    private decimal _tasaDeInteres;
-    private decimal _limiteDeDescubierto;
-    private decimal _comision;
-    private string[] _titulares;
+    public string Numero { get; }
+    public decimal Saldo { get; protected set; }
+    public Estado Estado { get; protected set; }
+    public string[] Titulares { get; }
+    public decimal TasaDeInteres { get; protected set; }
 
-    public CuentaBancaria(string numero, decimal saldo, TipoCuenta tipo, string[] titulares)
+    protected CuentaBancaria(string numero, decimal saldo, string[] titulares)
     {
-        _numero = numero;
-        _saldo = saldo;
-        _tipo = tipo;
-        _estado = Estado.Activa;
-        _titulares = titulares;
-    }
-    #region Getters/Setters
-    public string GetNumero()
-    {
-        return _numero;
+        Numero = numero;
+        Saldo = saldo;
+        Titulares = titulares;
+        Estado = Estado.Activa;
     }
 
-    public decimal GetSaldo()
+    public virtual void SetTasaDeInteres(decimal tasa)
     {
-        return _saldo;
-    }
-    public TipoCuenta GetTipo()
-    {
-        return _tipo;
+        TasaDeInteres = tasa;
     }
 
-    public Estado GetEstado()
+    public abstract TipoCuenta Tipo { get; }
+
+    
+    protected void SuspenderCuenta()
     {
-        return _estado;
+        Estado = Estado.Suspendida;
     }
 
-    public void SetEstado(Estado estado)
+    
+    public class MontoNoValido : Exception
     {
-        _estado = estado;
+        public MontoNoValido(string mensaje) : base(mensaje) { }
     }
 
-    public decimal GetTasaDeInteres()
+    
+    public class SaldoInsuficiente : Exception
     {
-        return _tasaDeInteres;
+        public SaldoInsuficiente(string mensaje) : base(mensaje) { }
     }
 
-    public void SetTasaDeInteres(decimal tasaDeInteres)
+   
+    protected void ValidarMonto(decimal monto)
     {
-        _tasaDeInteres = tasaDeInteres;
-    }
-
-    public decimal GetLimiteDeDescubierto()
-    {
-        return _limiteDeDescubierto;
-    }
-
-    public void SetLimiteDeDescubierto(decimal limiteDeDescubierto)
-    {
-        _limiteDeDescubierto = limiteDeDescubierto;
-    }
-
-    public decimal GetComision()
-    {
-        return _comision;
-    }
-
-    public void SetComision(decimal comision)
-    {
-        _comision = comision;
-    }
-
-    public string[] GetTitulares()
-    {
-        return _titulares;
-    }
-    #endregion
-
-    public void Depositar(decimal monto)
-    {
-        if (_tipo == TipoCuenta.CajaDeAhorro)
+        if (monto <= 0)
         {
-            _saldo += monto;
-        }
-        else if (_tipo == TipoCuenta.CuentaCorriente)
-        {
-            monto -= monto * _comision;
-            _saldo += monto;
+            throw new MontoNoValido("El monto debe ser mayor que cero.");
         }
     }
 
-    public void Retirar(decimal monto)
+   
+    protected void ValidarEstadoActivo()
     {
-        if (_tipo == TipoCuenta.CajaDeAhorro)
+        if (Estado != Estado.Activa)
         {
-            _saldo -= monto;
-        }
-        else if (_tipo == TipoCuenta.CuentaCorriente)
-        {
-            if (_saldo - monto >= -_limiteDeDescubierto)
-            {
-                _saldo -= monto;
-            }
-            if (_saldo < 0)
-            {
-                _estado = Estado.Suspendida;
-            }
+            throw new Exception("La cuenta no está activa.");
         }
     }
 
-    public void AplicarInteres()
-    {
-        if (_tipo == TipoCuenta.CajaDeAhorro)
-        {
-            _saldo += _saldo * _tasaDeInteres;
-        }
-    }
+    public abstract void Depositar(decimal monto);
+    public abstract void Retirar(decimal monto);
 }
+
