@@ -17,30 +17,61 @@ namespace Dsw2025Ej8.Domain
 
         public override void Depositar(decimal monto)
         {
-            ValidarEstadoActivo();  
-            ValidarMonto(monto);  
+            try
+            {
+                ValidarEstadoActivo();  
+                ValidarMonto(monto);   
 
-            Saldo += monto;
+                Saldo += monto;
+            }
+            catch (MontoNoValido ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (CuentaNoActiva ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inesperado: {ex.Message}");
+            }
         }
 
         public override void Retirar(decimal monto)
         {
-            ValidarEstadoActivo();  
-            ValidarMonto(monto); 
-
-            
-            if (monto > Saldo)
+            try
             {
-                throw new SaldoInsuficiente("Fondos insuficientes.");
+                ValidarEstadoActivo(); 
+                ValidarMonto(monto);    
+
+                if (monto > Saldo)
+                {
+                    throw new SaldoInsuficiente("Fondos insuficientes.");
+                }
+
+                Saldo -= monto;
+
+                if (Saldo < 0)
+                {
+                    SuspenderCuenta(); 
+                }
             }
-
-          
-            Saldo -= monto;
-
-            
-            if (Saldo < 0)
+            catch (MontoNoValido ex)
             {
-                SuspenderCuenta(); 
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (CuentaNoActiva ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (SaldoInsuficiente ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inesperado: {ex.Message}");
             }
         }
 
@@ -49,5 +80,5 @@ namespace Dsw2025Ej8.Domain
             Saldo += Saldo * TasaDeInteres;
         }
     }
-
 }
+
